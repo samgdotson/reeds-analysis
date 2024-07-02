@@ -8,11 +8,7 @@ import argparse
 
 file_dir = Path(os.path.dirname(os.path.abspath(__file__)))
 
-reeds_dir = Path("C:/Users/sdotson/OneDrive - Union of Concerned Scientists/Documents/Analysis/2024_reeds_reproduction/reeds_results")
-
-
-if __name__ == "__main__":
-
+def aggregate(reeds_dir):
     files = glob(str(reeds_dir/"*"/"outputs"/"*.csv"))
     
     scenario_files = [f.split('\\')[-3:] for f in files]
@@ -36,12 +32,30 @@ if __name__ == "__main__":
                 df = pd.read_csv(str(file_path))
                 df['scenario'] = scene
                 frames.append(df)
-                print(f"[SUCCESS] {file_path}")
+                print(f"[SUCCESS] {scene}/{fname}")
             except FileNotFoundError:
-                print(f'[FILE NOT FOUND] {file_path}')
+                print(f'[FILE NOT FOUND] {scene}/{fname}')
                 continue
         combined_df = pd.concat(frames, axis=0)
         combined_df.to_csv(str(output_folder/fname))
+
+    return 
+
+if __name__ == "__main__":
+
+        parser = argparse.ArgumentParser(description="Combines results from many ReEDS scenarios.")
+        
+        parser.add_argument("-d", "--directory", help="Directory with ReEDS output data.")
+        
+        args = parser.parse_args()
+        
+        data_path = Path(args.directory).resolve()
+        
+        aggregate(reeds_dir=data_path)
+        
+        
+        
+
         
         
         
