@@ -31,6 +31,16 @@ def aggregate(reeds_dir):
             try:
                 df = pd.read_csv(str(file_path))
                 df['scenario'] = scene
+                
+                try:
+                    df.rename(columns={"Dim1":"i",
+                                    "Dim2":"r",
+                                    "Dim3":"t",
+                                    "Val":"Value"}, inplace=True)
+                except:
+                    pass
+                
+                
                 frames.append(df)
                 print(f"[SUCCESS] {scene}/{fname}")
             except FileNotFoundError:
